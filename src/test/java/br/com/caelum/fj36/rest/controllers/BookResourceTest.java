@@ -84,7 +84,7 @@ public class BookResourceTest {
 
     @Test
     public void shouldCreateANewBook() {
-        AuthorForm fernando = new AuthorForm(1L, "Fernando");
+        AuthorForm fernando = new AuthorForm(1L);
 
         BookForm form = new BookForm("Java EE", fernando);
 
@@ -102,7 +102,7 @@ public class BookResourceTest {
 
     @Test
     public void shouldUpdateANewBook() {
-        AuthorForm fernando = new AuthorForm(1L, "Fernando");
+        AuthorForm fernando = new AuthorForm(1L);
         BookForm form = new BookForm("Java EE", fernando);
 
         Response response = client.target("http://localhost:8080/jax-rs/books")
@@ -115,7 +115,7 @@ public class BookResourceTest {
         assertEquals(Status.CREATED, response.getStatusInfo().toEnum());
         assertEquals("http://localhost:8080/jax-rs/books/java-ee", response.getHeaderString("Location"));
 
-        AuthorForm alberto = new AuthorForm(2L, "Alberto");
+        AuthorForm alberto = new AuthorForm(2L);
         BookForm updatedForm = new BookForm("Java EE", fernando, alberto);
         HttpEntity<BookForm> httpEntity = new HttpEntity<>(form);
 

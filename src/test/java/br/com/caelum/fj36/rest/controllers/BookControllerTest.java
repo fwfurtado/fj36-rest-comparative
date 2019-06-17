@@ -74,7 +74,7 @@ public class BookControllerTest {
 
     @Test
     public void shouldCreateANewBook() {
-        AuthorForm fernando = new AuthorForm(1L, "Fernando");
+        AuthorForm fernando = new AuthorForm(1L);
 
         BookForm form = new BookForm("Java EE", fernando);
 
@@ -89,15 +89,16 @@ public class BookControllerTest {
 
     @Test
     public void shouldUpdateANewBook() {
-        AuthorForm fernando = new AuthorForm(1L, "Fernando");
+        AuthorForm fernando = new AuthorForm(1L);
         BookForm form = new BookForm("Java EE", fernando);
         ResponseEntity<Void> entity = rest.postForEntity("http://localhost:8080/spring/books", form, Void.class);
         assertEquals(HttpStatus.CREATED, entity.getStatusCode());
         assertEquals(URI.create("/spring/books/java-ee"), entity.getHeaders().getLocation());
 
-        AuthorForm alberto = new AuthorForm(2L, "Alberto");
+        AuthorForm alberto = new AuthorForm(2L);
         BookForm updatedForm = new BookForm("Java EE", fernando, alberto);
-        HttpEntity<BookForm> httpEntity = new HttpEntity<>(form);
+
+        HttpEntity<BookForm> httpEntity = new HttpEntity<>(updatedForm);
 
         ResponseEntity<BookView> putEntity = rest.exchange("http://localhost:8080/spring/books/4", HttpMethod.PUT, httpEntity, BookView.class);
 

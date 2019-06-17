@@ -1,11 +1,14 @@
 package br.com.caelum.fj36.rest.service;
 
+import br.com.caelum.fj36.rest.controllers.form.AuthorForm;
 import br.com.caelum.fj36.rest.controllers.form.BookForm;
 import br.com.caelum.fj36.rest.controllers.view.BookView;
 import br.com.caelum.fj36.rest.converter.BookConverter;
 import br.com.caelum.fj36.rest.exceptions.BookNotFoundException;
 import br.com.caelum.fj36.rest.factory.SlugFactory;
+import br.com.caelum.fj36.rest.models.Author;
 import br.com.caelum.fj36.rest.models.Book;
+import br.com.caelum.fj36.rest.repository.AuthorRepository;
 import br.com.caelum.fj36.rest.repository.BookRepository;
 import java.util.List;
 import java.util.Optional;
@@ -16,11 +19,13 @@ import org.springframework.stereotype.Service;
 public class BookService {
 
     private final BookRepository repository;
+    private final AuthorRepository authorRepository;
     private final BookConverter converter;
     private final SlugFactory slug;
 
-    public BookService(BookRepository repository, BookConverter converter, SlugFactory slug) {
+    public BookService(BookRepository repository, AuthorRepository authorRepository, BookConverter converter, SlugFactory slug) {
         this.repository = repository;
+        this.authorRepository = authorRepository;
         this.converter = converter;
         this.slug = slug;
     }
@@ -63,9 +68,18 @@ public class BookService {
     }
 
     private Book persistBy(BookForm form) {
+        List<Author> authors = form.getAuthors().stream()
+                                    .map(AuthorForm::getId)
+                                    .map(authorRepository::findById)
+                                    .filter(Optional::isPresent)
+                                    .map(Optional::get)
+                                    .collect(Collectors.toList());
+
         Book book = converter.parseFrom(form);
 
         slug.generateBy(book::getTitle).andApplyVia(book::setSlug);
+
+        book.setAuthors(authors);
 
         repository.save(book);
         return book;
