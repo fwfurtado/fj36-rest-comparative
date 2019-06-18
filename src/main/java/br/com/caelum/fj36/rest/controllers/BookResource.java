@@ -8,6 +8,7 @@ import br.com.caelum.fj36.rest.service.BookService;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
@@ -25,7 +26,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component //because we uses spring container
-//@Singleton // create a singleton only when using application server with java ee
+//@Singleton, @Stateless, @Stateful // create a singleton only when using application server with java ee
+//@Application, @Request, @Session
 @Path("books")
 @Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
 public class BookResource {
@@ -59,7 +61,7 @@ public class BookResource {
 
     @POST
     @Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-    public Response createBy(BookForm bookForm) {
+    public Response createBy(@Valid BookForm bookForm) {
         String slug = service.createBy(bookForm);
 
         URI uri = URI.create("/jax-rs/books/" + slug);
@@ -71,7 +73,7 @@ public class BookResource {
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-    public Response update(@PathParam("id") Long id, BookForm form) {
+    public Response update(@PathParam("id") Long id,@Valid BookForm form) {
         form.setId(id);
 
         BookView book = service.updateBookBy(form);

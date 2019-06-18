@@ -88,7 +88,6 @@ public class BookResourceTest {
 
         BookForm form = new BookForm("Java EE", fernando);
 
-
         Response response = client.target("http://localhost:8080/jax-rs/books")
                                 .request()
                                     .post(Entity.json(form));
@@ -117,7 +116,6 @@ public class BookResourceTest {
 
         AuthorForm alberto = new AuthorForm(2L);
         BookForm updatedForm = new BookForm("Java EE", fernando, alberto);
-        HttpEntity<BookForm> httpEntity = new HttpEntity<>(form);
 
         Response putResponse = client.target("http://localhost:8080/jax-rs/books/4")
             .request()

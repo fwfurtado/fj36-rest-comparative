@@ -63,7 +63,8 @@ public class BookRepository {
 
     public List<Book> findByTitleLike(String title) {
         return database.values().stream()
-                    .filter(book -> book.getTitle().toLowerCase().contains(title.toLowerCase())).collect(Collectors.toList());
+                    .filter(book -> book.getTitle().toLowerCase().contains(title.toLowerCase()))
+                        .collect(Collectors.toList());
     }
 
 }
